@@ -15,17 +15,17 @@ namespace LibraryTester
             Console.ReadKey();
             try
             {
-                Power a = QuantityValue.CreateValue<Power>("2,5", DimensionList.Power.mW);
+                Power a = QuantityValue.CreateValue<Power>("2,5", Power.mW);
                 Console.WriteLine(a);
-                Power b = QuantityValue.CreateValue<Power>("0", DimensionList.Power.dBm);
+                Power b = QuantityValue.CreateValue<Power>("0", Power.dBm);
                 Console.WriteLine(b);
-                Frequency c = QuantityValue.CreateValue<Frequency>("435,56", DimensionList.Frequency.kHz);
+                Frequency c = QuantityValue.CreateValue<Frequency>("435,56", Frequency.kHz);
                 Console.WriteLine(c);
-                //Frequency d = QuantityValue.CreateValue<Frequency>("1", DimensionList.Power.dBm);
-                //Console.WriteLine(d);
-                Temperature e = QuantityValue.CreateValue<Temperature>("10", DimensionList.Temperature.C);
+                Frequency d = QuantityValue.CreateValue<Frequency>("1", Power.dBm);
+                Console.WriteLine(d);
+                Temperature e = QuantityValue.CreateValue<Temperature>("10", Temperature.C);
                 Console.WriteLine(e);
-                Temperature f = QuantityValue.CreateValue<Temperature>("0", DimensionList.Temperature.K);
+                Temperature f = QuantityValue.CreateValue<Temperature>("0", Temperature.K);
                 Console.WriteLine(f);
 
             }

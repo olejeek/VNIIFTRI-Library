@@ -82,8 +82,10 @@ namespace VNIIFTRI.Basics.QuantityValues
     /// </summary>
     /// <typeparam name="T">Тип числа, в котором измеряется величина 
     /// (целое, с плавающей точкой, комплексное)</typeparam>
-    public abstract class QuantityValue<T> : QuantityValue
+    public abstract class QuantityValue<T> : QuantityValue, IMeasurendDimension
     {
+        public static Dictionary<string, Dimension> Dimensions { get; protected set; }
+
         protected T value;
 
         /// <summary>
@@ -109,12 +111,26 @@ namespace VNIIFTRI.Basics.QuantityValues
             this.value = value;
         }
 
-        protected void CheckAndSetStandartValue(T value, Dimension dimension, IMeasurendDimension measurend)
+        protected void CheckAndSetStandartValue(T value, Dimension dimension)
         {
-            if (!measurend.Contains(dimension))
-                throw new ArgumentException(dimension.ToString() + 
-                    " не является размерностью для измеряемой величины " + measurend.Name);
+            if (!Dimensions.Values.Contains(dimension))
+                throw new ArgumentException(dimension.ToString() +
+                    " не является размерностью для измеряемой величины " + Name);
             SetValue(value);
         }
+
+        #region IMeasurendDimension
+        public IEnumerator<Dimension> GetEnumerator()
+        {
+            return Dimensions.Values.GetEnumerator();
+        }
+
+        public abstract string Name { get; }
+
+        public bool Contains(Dimension dimension)
+        {
+            return Dimensions.Values.Contains(dimension);
+        }
+        #endregion
     }
 }

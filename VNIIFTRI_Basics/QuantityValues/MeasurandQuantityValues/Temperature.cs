@@ -9,12 +9,26 @@ namespace VNIIFTRI.Basics.QuantityValues
 {
     public class Temperature : QuantityValue<double>
     {
+        #region Static
+        public static readonly Dimension K = new Dimension(Measurand.Temperature, 0, "K");
+        public static readonly Dimension C = new Dimension(Measurand.Temperature, 1, "C");
+
+        static Temperature()
+        {
+            Dimensions = new Dictionary<string, Dimension>()
+            {
+                {K.Text, K },
+                {C.Text, C }
+            };
+        }
+        #endregion
+
         public Temperature(double value) : base(value) { }
         public Temperature() { }
 
         public override string ToString()
         {
-            return value.ToString() + " " + DimensionList.Temperature.K.ToString();
+            return value.ToString() + " " + Temperature.K.ToString();
         }
         protected override void SetValue(string src)
         {
@@ -22,15 +36,15 @@ namespace VNIIFTRI.Basics.QuantityValues
         }
         protected override void SetValue(string src, Dimension dimension)
         {
-            CheckAndSetStandartValue(Convert.ToDouble(src), dimension, DimensionList.Temperature);
-            if (dimension == DimensionList.Temperature.K) return;
-            if (dimension == DimensionList.Temperature.C) value += 275.15;
+            CheckAndSetStandartValue(Convert.ToDouble(src), dimension);
+            if (dimension == K) return;
+            if (dimension == C) value += 275.15;
             else
                 throw new ArgumentException("Неизвестная или неучтенная размерность в классе Temperature.");
 
         }
-        
 
+        public override string Name { get { return "Температура"; } }
 
     }
 }
