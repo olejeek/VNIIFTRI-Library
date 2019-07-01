@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VNIIFTRI.Basics.Dimensions;
 
-namespace VNIIFTRI.Basics.QuantityValues
+namespace VNIIFTRI.Basics
 {
     public class Frequency : QuantityValue<double>
     {

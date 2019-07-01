@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VNIIFTRI.Basics.Dimensions
+namespace VNIIFTRI.Basics
 {
     /// <summary>
     /// Перечисление, содержащее измеряемые величины

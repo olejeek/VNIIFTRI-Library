@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VNIIFTRI.Basics.Dimensions
+namespace VNIIFTRI.Basics
 {
     /// <summary>
     /// Класс, описывающий размерность измеряемой величины
@@ -13,19 +13,29 @@ namespace VNIIFTRI.Basics.Dimensions
     {
         #region Fields
 
-        static DimensionList List = DimensionList.Instance;
+        /// <summary>
+        /// Словарь, состоящий из словарей, содержащие размерности для всех величин
+        /// </summary>
+        public static readonly Dictionary<Measurand, Dictionary<string, Dimension>> AllDimensions =
+            new Dictionary<Measurand, Dictionary<string, Dimension>>()
+            {
+                {Measurand.Frequency, Frequency.Dimensions},
+                {Measurand.Power, Power.Dimensions },
+                {Measurand.Temperature, Temperature.Dimensions }
+            };
 
+
+        //public static virtual Dictionary<string, Dimension> Dimensions { get; }
 
         /// <summary>
         /// Указывает к какой измеряемой величине относится данная размерность
         /// </summary>
         private readonly Measurand measurand;
-        
+
         /// <summary>
         /// Уникальный идентификатор размерности (так же используется для указания степени)
         /// </summary>
-        private readonly int id;
-        public int Id { get { return id; } }
+        public int Id { get; }
 
         /// <summary>
         /// Текстовое отображение размерности
@@ -44,7 +54,7 @@ namespace VNIIFTRI.Basics.Dimensions
         public Dimension(Measurand measurand, int id, string value)
         {
             this.measurand = measurand;
-            this.id = id;
+            this.Id = id;
             this.Text = value;
         }
 
@@ -55,16 +65,23 @@ namespace VNIIFTRI.Basics.Dimensions
         /// <returns>Размерность, преобразованная из строки</returns>
         public static Dimension Convert(string src)
         {
-            foreach (Dimension dm in DimensionList.Instance)
+            foreach (var dicts in AllDimensions.Values)
             {
-                if (src == dm.Text) return dm;
+                foreach (Dimension dm in dicts.Values)
+                    if (src == dm.Text) return dm;
             }
             throw new ArgumentException("Невозможно строку \""+ src +"\" преобразовать в размерность");
         }
 
+        /// <summary>
+        /// Преобразует строку с размерностью в размерность определенного типа
+        /// </summary>
+        /// <param name="src">Строка, которую необходимо преобразовать</param>
+        /// <param name="measurand">Измеряемая величина, которая измеряется в единицах, представленных в src</param>
+        /// <returns></returns>
         public static Dimension Convert(string src, Measurand measurand)
         {
-            foreach (Dimension dm in List[measurand])
+            foreach (Dimension dm in AllDimensions[measurand].Values)
                 if (src == dm.Text) return dm;
             throw new ArgumentException("Невозможно строку \"" + src + "\" преобразовать в размерность");
         }
@@ -77,16 +94,17 @@ namespace VNIIFTRI.Basics.Dimensions
         public static Dimension[] FindDimension(string src)
         {
             List<Dimension> dimensions = new List<Dimension>();
-            foreach (Dimension dm in DimensionList.Instance)
+            foreach (var dicts in AllDimensions.Values)
             {
-                if (src == dm.Text) dimensions.Add(dm);
+                foreach (Dimension dm in dicts.Values)
+                    if (src == dm.Text) dimensions.Add(dm);
             }
             return dimensions.ToArray();
         }
 
         public override int GetHashCode()
         {
-            return (int)measurand * 1000000 + id;
+            return (int)measurand * 1000000 + Id;
         }
         public override bool Equals(object obj)
         {
