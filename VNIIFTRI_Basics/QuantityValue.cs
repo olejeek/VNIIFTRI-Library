@@ -74,6 +74,10 @@ namespace VNIIFTRI.Basics
             t.SetValue(src, dimension);
             return t;
         }
+
+        public abstract IEnumerator<Dimension> GetEnumerator();
+        public abstract bool Contains(Dimension dimension);
+        public abstract string Name { get; }
     }
 
     /// <summary>
@@ -81,7 +85,7 @@ namespace VNIIFTRI.Basics
     /// </summary>
     /// <typeparam name="T">Тип числа, в котором измеряется величина 
     /// (целое, с плавающей точкой, комплексное)</typeparam>
-    public abstract class QuantityValue<T> : QuantityValue, IMeasurendDimension
+    public abstract class QuantityValue<T> : QuantityValue
     {
         public static Dictionary<string, Dimension> Dimensions { get; protected set; }
 
@@ -119,14 +123,12 @@ namespace VNIIFTRI.Basics
         }
 
         #region IMeasurendDimension
-        public IEnumerator<Dimension> GetEnumerator()
+        public override IEnumerator<Dimension> GetEnumerator()
         {
             return Dimensions.Values.GetEnumerator();
         }
 
-        public abstract string Name { get; }
-
-        public bool Contains(Dimension dimension)
+        public override bool Contains(Dimension dimension)
         {
             return Dimensions.Values.Contains(dimension);
         }
