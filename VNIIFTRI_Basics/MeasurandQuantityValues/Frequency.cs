@@ -16,6 +16,8 @@ namespace VNIIFTRI.Basics
         public static readonly Dimension GHz = new Dimension(Measurand.Frequency, 9, "GHz");
         public static readonly Dimension THz = new Dimension(Measurand.Frequency, 12, "TGz");
 
+        private static readonly string name = "Частота";
+
         static Frequency()
         {
             Dimensions = new Dictionary<string, Dimension>()
@@ -51,6 +53,6 @@ namespace VNIIFTRI.Basics
                 throw new ArgumentException("Неизвестная или неучтенная размерность в классе Frequency.");
         }
 
-        public override string Name { get { return "Частота"; } }
+        public override string Name { get { return name; } }
     }
 }

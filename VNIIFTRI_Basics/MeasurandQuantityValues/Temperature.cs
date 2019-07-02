@@ -12,6 +12,8 @@ namespace VNIIFTRI.Basics
         public static readonly Dimension K = new Dimension(Measurand.Temperature, 0, "K");
         public static readonly Dimension C = new Dimension(Measurand.Temperature, 1, "C");
 
+        private static readonly string name = "Температура";
+
         static Temperature()
         {
             Dimensions = new Dictionary<string, Dimension>()
@@ -43,7 +45,7 @@ namespace VNIIFTRI.Basics
 
         }
 
-        public override string Name { get { return "Температура"; } }
+        public override string Name { get { return name; } }
 
     }
 }

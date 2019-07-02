@@ -17,6 +17,8 @@ namespace VNIIFTRI.Basics
         public static readonly Dimension MW = new Dimension(Measurand.Power, 6, "MW");
         public static readonly Dimension dBm = new Dimension(Measurand.Power, 1, "dBm");
 
+        private static readonly string  name = "Мощность";
+
         static Power()
         {
             Dimensions = new Dictionary<string, Dimension>()
@@ -54,6 +56,6 @@ namespace VNIIFTRI.Basics
                 throw new ArgumentException("Неизвестная или неучтенная размерность в классе Power.");
         }
 
-        public override string Name { get { return "Мощность"; } }
+        public override string Name { get { return name; } }
     }
 }
