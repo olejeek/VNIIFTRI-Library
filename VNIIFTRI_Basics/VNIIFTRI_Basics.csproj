@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VNIIFTRI.Basics</RootNamespace>
-    <AssemblyName>VNIIFTRI_Basic</AssemblyName>
+    <AssemblyName>VNIIFTRI.Basic</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
