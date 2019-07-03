@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace VNIIFTRI.Basics
 {
@@ -32,25 +33,42 @@ namespace VNIIFTRI.Basics
         }
         #endregion
         public Frequency() { }
+        public Frequency(double value)
+        {
+            this.value = value;
+        }
+        public Frequency(double value, Dimension dimension)
+        {
+            SetValue(value, dimension);
+        }
 
         public override string ToString()
         {
             return value.ToString() + " " + Frequency.Hz.ToString();
         }
+        public override string ToString(Dimension dimension)
+        {
+            return (value / Math.Pow(10, dimension.Id)).ToString() + " " + dimension.ToString();
+        }
 
+        public override void SetValue(double value, Dimension dimension)
+        {
+            if (!CheckDimension(dimension))
+                throw new ArgumentException(dimension.ToString() +
+                    " не является размерностью для измеряемой величины " + Name);
+            if (dimension.Id % 3 == 0)
+                this.value = value * Math.Pow(10, dimension.Id);
+            else
+                throw new ArgumentException("Неизвестная или неучтенная размерность в классе Frequency.");
+        }
         protected override void SetValue(string src)
         {
-            if (src.Contains(".")) src = src.Replace(".", ",");
-            value = Convert.ToDouble(src);
+            value = double.Parse(src, CultureInfo.InvariantCulture);
         }
 
         protected override void SetValue(string src, Dimension dimension)
         {
-            CheckAndSetStandartValue(Convert.ToDouble(src), dimension);
-            if (dimension.Id % 3 == 0) value = value * Math.Pow(10, dimension.Id);
-
-            else
-                throw new ArgumentException("Неизвестная или неучтенная размерность в классе Frequency.");
+            SetValue(double.Parse(src, CultureInfo.InvariantCulture), dimension);
         }
 
         public override string Name { get { return name; } }

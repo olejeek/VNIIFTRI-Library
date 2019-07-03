@@ -36,7 +36,7 @@ namespace VNIIFTRI.Basics
         /// формат строки, где величина представлена ввиде числа с единицами измерения, разделенные
         /// пробелом</param>
         /// <returns>Величина, сконвертированная из значения строки</returns>
-        public static T CreateQuantityValue<T>(string src)
+        public static T CreateValue<T>(string src)
             where T : QuantityValue, new()
         {
             T t = new T();
@@ -88,6 +88,7 @@ namespace VNIIFTRI.Basics
     public abstract class QuantityValue<T> : QuantityValue
     {
         public static Dictionary<string, Dimension> Dimensions { get; protected set; }
+        protected static Dimension DefaultDimenion { get; set; }
 
         protected T value;
 
@@ -96,13 +97,20 @@ namespace VNIIFTRI.Basics
         /// классов
         /// </summary>
         protected QuantityValue() { }
-        public QuantityValue(T val)
+        //public QuantityValue(T val)
+        //{
+        //    this.value = val;
+        //}
+        //public abstract QuantityValue(T value, Dimension dimension)
+        //{
+        //    SetValue(value, dimension);
+        //}
+        public abstract string ToString(Dimension dimension);
+        public abstract void SetValue(T value, Dimension dimension);
+
+        public override string ToString()
         {
-            this.value = val;
-        }
-        public virtual string ToString(Dimension dimension)
-        {
-            return value.ToString() + " " + dimension.ToString();
+            return value.ToString() + " " + DefaultDimenion.ToString();
         }
 
         /// <summary>
@@ -114,15 +122,14 @@ namespace VNIIFTRI.Basics
             this.value = value;
         }
 
-        protected void CheckAndSetStandartValue(T value, Dimension dimension)
+        protected bool CheckDimension(Dimension dimension)
         {
-            if (!Dimensions.Values.Contains(dimension))
-                throw new ArgumentException(dimension.ToString() +
-                    " не является размерностью для измеряемой величины " + Name);
-            SetValue(value);
+            if (Dimensions.Values.Contains(dimension)) return true;
+            else return false;
         }
 
-        #region IMeasurendDimension
+        
+
         public override IEnumerator<Dimension> GetEnumerator()
         {
             return Dimensions.Values.GetEnumerator();
@@ -132,6 +139,5 @@ namespace VNIIFTRI.Basics
         {
             return Dimensions.Values.Contains(dimension);
         }
-        #endregion
     }
 }

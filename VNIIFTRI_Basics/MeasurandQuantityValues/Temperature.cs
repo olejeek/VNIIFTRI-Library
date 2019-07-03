@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace VNIIFTRI.Basics
 {
@@ -24,25 +25,44 @@ namespace VNIIFTRI.Basics
         }
         #endregion
 
-        public Temperature(double value) : base(value) { }
         public Temperature() { }
+        public Temperature(double value)
+        {
+            this.value = value;
+        }
+        public Temperature(double value, Dimension dimension)
+        {
+            SetValue(value, dimension);
+        }
 
         public override string ToString()
         {
             return value.ToString() + " " + Temperature.K.ToString();
         }
+        public override string ToString(Dimension dimension)
+        {
+            return ((dimension == Temperature.C) ? value + 275.15 : value).ToString() + 
+                " " + dimension.ToString();
+        }
+
+        public override void SetValue(double value, Dimension dimension)
+        {
+            if (!CheckDimension(dimension))
+                throw new ArgumentException(dimension.ToString() +
+                    " не является размерностью для измеряемой величины " + Name);
+            this.value = value;
+            if (dimension == K) return;
+            else if (dimension == C) value += 275.15;
+            else
+                throw new ArgumentException("Неизвестная или неучтенная размерность в классе Temperature.");
+        }
         protected override void SetValue(string src)
         {
-            value = Convert.ToDouble(src);
+            value = double.Parse(src, CultureInfo.InvariantCulture);
         }
         protected override void SetValue(string src, Dimension dimension)
         {
-            CheckAndSetStandartValue(Convert.ToDouble(src), dimension);
-            if (dimension == K) return;
-            if (dimension == C) value += 275.15;
-            else
-                throw new ArgumentException("Неизвестная или неучтенная размерность в классе Temperature.");
-
+            SetValue(double.Parse(src, CultureInfo.InvariantCulture), dimension);
         }
 
         public override string Name { get { return name; } }
