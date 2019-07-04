@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Globalization;
 using VNIIFTRI.Basics.Mathematic;
 
-namespace VNIIFTRI.Basics
+namespace VNIIFTRI.Basics.Measurands
 {
     public class Temperature : QuantityValue<double>
     {

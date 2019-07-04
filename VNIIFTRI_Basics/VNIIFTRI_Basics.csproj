@@ -41,17 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dimension.cs" />
+    <Compile Include="Measurands\Dimension.cs" />
     <Compile Include="Mathematic\MeasMath.cs" />
-    <Compile Include="Measurand.cs" />
+    <Compile Include="Measurands\Measurand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MeasurandQuantityValues\Frequency.cs" />
-    <Compile Include="MeasurandQuantityValues\Power.cs" />
-    <Compile Include="MeasurandQuantityValues\Temperature.cs" />
-    <Compile Include="QuantityValue.cs" />
+    <Compile Include="Measurands\MeasurandQuantityValues\Frequency.cs" />
+    <Compile Include="Measurands\MeasurandQuantityValues\Power.cs" />
+    <Compile Include="Measurands\MeasurandQuantityValues\Temperature.cs" />
+    <Compile Include="Measurands\QuantityValue.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Measurands\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

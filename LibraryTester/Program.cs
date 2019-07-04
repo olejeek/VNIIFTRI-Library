@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VNIIFTRI.Basics.Mathematic;
-using VNIIFTRI.Basics;
+using VNIIFTRI.Basics.Measurands;
 
 namespace LibraryTester
 {
