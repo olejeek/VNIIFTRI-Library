@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
+using VNIIFTRI.Basics.Mathematic;
 
 namespace VNIIFTRI.Basics
 {
@@ -20,12 +21,8 @@ namespace VNIIFTRI.Basics
         public static readonly Dimension dBm = new Dimension(Measurand.Power, 1, "dBm");
 
         private static readonly string  name = "Мощность";
-        
-
-        static Power()
-        {
-            DefaultDimenion = Power.W;
-            Dimensions = new Dictionary<string, Dimension>()
+        public static readonly Measurand measurand = Measurand.Power;
+        public static readonly Dictionary<string, Dimension> Dimensions = new Dictionary<string, Dimension>()
             {
                 { pW.Text, pW },
                 { nW.Text, nW },
@@ -36,7 +33,8 @@ namespace VNIIFTRI.Basics
                 { MW.Text, MW },
                 { dBm.Text, dBm },
             };
-        }
+        public static readonly Dimension DefaultDimension = Power.W;
+
         #endregion
         public Power() { }
         public Power(double value)
@@ -48,48 +46,92 @@ namespace VNIIFTRI.Basics
             SetValue(value, dimension);
         }
 
+        public override string ToString()
+        {
+            return value.ToString() + " " + DefaultDimension.ToString();
+        }
         public override string ToString(Dimension dimension)
         {
-            if (!CheckDimension(dimension))
-                throw new ArgumentException(dimension.ToString() +
-                    " не является размерностью для измеряемой величины " + Name);
             StringBuilder sb = new StringBuilder(20);
-            if (dimension.Id % 3 == 0)
-                sb.Append((value / Math.Pow(10, dimension.Id)).ToString());
-            else if (dimension == Power.dBm)
-                sb.Append((10 * Math.Log10(this /new Power(1, Power.mW))).ToString());
-            else
-                throw new ArgumentException("Неизвестная или неучтенная размерность в классе Power.");
+            sb.Append(GetValue(dimension));
             sb.Append(" " + dimension.ToString());
             return sb.ToString();
         }
+        protected override string FormatString(int length, char dimension)
+        {
+            Dimension dim = DefaultDimension;
+            switch(dimension)
+            {
+                case 'p':
+                case 'n':
+                case 'u':
+                case 'm':
+                case 'k':
+                case 'M':
+                    dim = Dimensions[dimension + "W"];
+                    break;
+                case 'd':
+                    dim = Dimensions["dBm"];
+                    break;
+            }
+            double val = GetValue(dim);
+            return MeasMath.SignifyString(val, length) + " " + dim.ToString();
+        }
+
         public override void SetValue(double value, Dimension dimension)
         {
-            if (!CheckDimension(dimension))
+            //if (!CheckDimension(measurand, dimension))
+            if (!Dimensions.Values.Contains(dimension))
                 throw new ArgumentException(dimension.ToString() +
                     " не является размерностью для измеряемой величины " + Name);
             double t = value;
-            if (dimension.Id % 3 == 0) value = t * Math.Pow(10, dimension.Id);
+            if (dimension.Id % 3 == 0) this.value = t * Math.Pow(10, dimension.Id);
             else if (dimension == Power.dBm)
-                value = Math.Pow(10, t / 10) * Math.Pow(10, Power.mW.Id);
+                this.value = Math.Pow(10, t / 10) * Math.Pow(10, Power.mW.Id);
             else
                 throw new ArgumentException("Неизвестная или неучтенная размерность в классе Power.");
         }
 
         protected override void SetValue(string src)
         {
+            src = src.Replace(',', '.');
             value = double.Parse(src, CultureInfo.InvariantCulture);
         }
 
         protected override void SetValue(string src, Dimension dimension)
         {
+            src = src.Replace(',', '.');
             SetValue(double.Parse(src, CultureInfo.InvariantCulture), dimension);
+        }
+        protected override double GetValue(Dimension dimension)
+        {
+            if (!Dimensions.Values.Contains(dimension))
+                throw new ArgumentException(dimension.ToString() +
+                    " не является размерностью для измеряемой величины " + Name);
+            if (dimension.Id % 3 == 0)
+                return (value / Math.Pow(10, dimension.Id));
+            else if (dimension == Power.dBm)
+                return (10 * Math.Log10(this / new Power(1, Power.mW)));
+            else
+                throw new ArgumentException("Неизвестная или неучтенная размерность в классе " + Name);
         }
 
         public override string Name { get { return name; } }
+
+        public override IEnumerator<Dimension> GetEnumerator()
+        {
+            return Dimensions.Values.GetEnumerator();
+        }
+
+        public override bool Contains(Dimension dimension)
+        {
+            return Dimensions.Values.Contains(dimension);
+        }
+
         public static double operator/ (Power lv, Power rv)
         {
             return lv.value / rv.value;
         }
+
     }
 }

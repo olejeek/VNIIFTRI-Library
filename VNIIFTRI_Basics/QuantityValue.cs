@@ -85,11 +85,8 @@ namespace VNIIFTRI.Basics
     /// </summary>
     /// <typeparam name="T">Тип числа, в котором измеряется величина 
     /// (целое, с плавающей точкой, комплексное)</typeparam>
-    public abstract class QuantityValue<T> : QuantityValue
+    public abstract class QuantityValue<T> : QuantityValue, IFormattable
     {
-        public static Dictionary<string, Dimension> Dimensions { get; protected set; }
-        protected static Dimension DefaultDimenion { get; set; }
-
         protected T value;
 
         /// <summary>
@@ -97,21 +94,8 @@ namespace VNIIFTRI.Basics
         /// классов
         /// </summary>
         protected QuantityValue() { }
-        //public QuantityValue(T val)
-        //{
-        //    this.value = val;
-        //}
-        //public abstract QuantityValue(T value, Dimension dimension)
-        //{
-        //    SetValue(value, dimension);
-        //}
         public abstract string ToString(Dimension dimension);
         public abstract void SetValue(T value, Dimension dimension);
-
-        public override string ToString()
-        {
-            return value.ToString() + " " + DefaultDimenion.ToString();
-        }
 
         /// <summary>
         /// Присваивание значение value измеренному значению
@@ -122,22 +106,38 @@ namespace VNIIFTRI.Basics
             this.value = value;
         }
 
-        protected bool CheckDimension(Dimension dimension)
+        //protected static bool CheckDimension(Measurand measurend, Dimension dimension)
+        //{
+        //    if (Dimension.AllDimensions[measurend].Values.Contains(dimension)) return true;
+        //    else return false;
+        //}
+
+        public string ToString(string format, IFormatProvider formatProvider)
         {
-            if (Dimensions.Values.Contains(dimension)) return true;
-            else return false;
+            if (format == null) return ToString();
+            char dimension = '\0';
+            int length;
+            StringBuilder sb = new StringBuilder(40);
+            if (format[0] == 'N')
+            {
+                sb.Append(Name + ": ");
+                format = format.Substring(1);
+            }
+            if (char.IsLetter(format.Last()))
+            {
+                dimension = format.Last();
+                format = format.Substring(0, format.Length - 1);
+            }
+            int.TryParse(format, out length);
+            sb.Append(FormatString(length, dimension));
+            return sb.ToString();
         }
+
+        protected abstract string FormatString(int length, char dimension);
+        protected abstract T GetValue(Dimension dimension);
 
         
 
-        public override IEnumerator<Dimension> GetEnumerator()
-        {
-            return Dimensions.Values.GetEnumerator();
-        }
-
-        public override bool Contains(Dimension dimension)
-        {
-            return Dimensions.Values.Contains(dimension);
-        }
+        
     }
 }

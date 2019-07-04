@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
+using VNIIFTRI.Basics.Mathematic;
 
 namespace VNIIFTRI.Basics
 {
@@ -18,10 +19,8 @@ namespace VNIIFTRI.Basics
         public static readonly Dimension THz = new Dimension(Measurand.Frequency, 12, "TGz");
 
         private static readonly string name = "Частота";
-
-        static Frequency()
-        {
-            Dimensions = new Dictionary<string, Dimension>()
+        public static readonly Measurand measurand = Measurand.Frequency;
+        public static readonly Dictionary<string, Dimension> Dimensions = new Dictionary<string, Dimension>()
             {
                 {mHz.Text, mHz},
                 {Hz.Text, Hz },
@@ -30,7 +29,7 @@ namespace VNIIFTRI.Basics
                 {GHz.Text, GHz },
                 {THz.Text, THz },
             };
-        }
+        public static readonly Dimension DefaultDimension = Hz;
         #endregion
         public Frequency() { }
         public Frequency(double value)
@@ -44,7 +43,7 @@ namespace VNIIFTRI.Basics
 
         public override string ToString()
         {
-            return value.ToString() + " " + Frequency.Hz.ToString();
+            return value.ToString() + " " + DefaultDimension.ToString();
         }
         public override string ToString(Dimension dimension)
         {
@@ -53,7 +52,7 @@ namespace VNIIFTRI.Basics
 
         public override void SetValue(double value, Dimension dimension)
         {
-            if (!CheckDimension(dimension))
+            if (!Dimensions.Values.Contains(dimension))
                 throw new ArgumentException(dimension.ToString() +
                     " не является размерностью для измеряемой величины " + Name);
             if (dimension.Id % 3 == 0)
@@ -63,14 +62,52 @@ namespace VNIIFTRI.Basics
         }
         protected override void SetValue(string src)
         {
+            src = src.Replace(',', '.');
             value = double.Parse(src, CultureInfo.InvariantCulture);
+        }
+        protected override string FormatString(int length, char dimension)
+        {
+            Dimension dim = DefaultDimension;
+            switch (dimension)
+            {
+                case 'm':
+                case 'k':
+                case 'M':
+                case 'G':
+                case 'T':
+                    dim = Dimensions[dimension + "Hz"];
+                    break;
+            }
+            double val = GetValue(dim);
+            return MeasMath.SignifyString(val, length) + " " + dim.ToString();
+        }
+        protected override double GetValue(Dimension dimension)
+        {
+            if (!Dimensions.Values.Contains(dimension))
+                throw new ArgumentException(dimension.ToString() +
+                    " не является размерностью для измеряемой величины " + Name);
+            if (dimension.Id % 3 == 0)
+                return (value / Math.Pow(10, dimension.Id));
+            else
+                throw new ArgumentException("Неизвестная или неучтенная размерность в классе " + Name);
         }
 
         protected override void SetValue(string src, Dimension dimension)
         {
+            src = src.Replace(',', '.');
             SetValue(double.Parse(src, CultureInfo.InvariantCulture), dimension);
         }
 
         public override string Name { get { return name; } }
+
+        public override IEnumerator<Dimension> GetEnumerator()
+        {
+            return Dimensions.Values.GetEnumerator();
+        }
+
+        public override bool Contains(Dimension dimension)
+        {
+            return Dimensions.Values.Contains(dimension);
+        }
     }
 }

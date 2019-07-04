@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dimension.cs" />
+    <Compile Include="Mathematic\MeasMath.cs" />
     <Compile Include="Measurand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MeasurandQuantityValues\Frequency.cs" />
@@ -49,6 +50,8 @@
     <Compile Include="MeasurandQuantityValues\Temperature.cs" />
     <Compile Include="QuantityValue.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Measurands\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

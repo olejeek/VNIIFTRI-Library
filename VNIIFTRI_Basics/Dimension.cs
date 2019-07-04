@@ -19,13 +19,11 @@ namespace VNIIFTRI.Basics
         public static readonly Dictionary<Measurand, Dictionary<string, Dimension>> AllDimensions =
             new Dictionary<Measurand, Dictionary<string, Dimension>>()
             {
-                {Measurand.Frequency, Frequency.Dimensions},
-                {Measurand.Power, Power.Dimensions },
-                {Measurand.Temperature, Temperature.Dimensions }
+                { Measurand.Frequency, Frequency.Dimensions},
+                { Measurand.Power, Power.Dimensions },
+                { Measurand.Temperature, Temperature.Dimensions }
             };
 
-
-        //public static virtual Dictionary<string, Dimension> Dimensions { get; }
 
         /// <summary>
         /// Указывает к какой измеряемой величине относится данная размерность
@@ -57,6 +55,12 @@ namespace VNIIFTRI.Basics
             this.Id = id;
             this.Text = value;
         }
+
+        //public bool Check(Measurand measurand)
+        //{
+        //    return AllDimensions[measurand].Values.Contains(this);
+
+        //}
 
         /// <summary>
         /// Преобразует строку в размерность
