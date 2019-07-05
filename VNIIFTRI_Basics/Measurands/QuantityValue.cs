@@ -101,7 +101,7 @@ namespace VNIIFTRI.Basics.Measurands
         /// Присваивание значение value измеренному значению
         /// </summary>
         /// <param name="value">Присваиваемое значение</param>
-        public virtual void SetValue(T value)
+        public void SetValue(T value)
         {
             this.value = value;
         }

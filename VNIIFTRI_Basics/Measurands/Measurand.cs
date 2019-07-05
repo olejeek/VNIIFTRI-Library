@@ -22,6 +22,10 @@ namespace VNIIFTRI.Basics.Measurands
         /// <summary>
         /// Частота
         /// </summary>
-        Frequency
+        Frequency,
+        /// <summary>
+        /// Коэффициент шума
+        /// </summary>
+        NoiseFactor
     }
 }

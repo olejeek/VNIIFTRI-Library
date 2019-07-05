@@ -81,7 +81,6 @@ namespace VNIIFTRI.Basics.Measurands
 
         public override void SetValue(double value, Dimension dimension)
         {
-            //if (!CheckDimension(measurand, dimension))
             if (!Dimensions.Values.Contains(dimension))
                 throw new ArgumentException(dimension.ToString() +
                     " не является размерностью для измеряемой величины " + Name);
@@ -96,7 +95,6 @@ namespace VNIIFTRI.Basics.Measurands
             else
                 throw new ArgumentException("Неизвестная или неучтенная размерность в классе Power.");
         }
-
         protected override void SetValue(string src)
         {
             src = src.Replace(',', '.');
@@ -104,7 +102,6 @@ namespace VNIIFTRI.Basics.Measurands
             if (t < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение");
             value = t;
         }
-
         protected override void SetValue(string src, Dimension dimension)
         {
             src = src.Replace(',', '.');
