@@ -117,11 +117,6 @@ namespace VNIIFTRI.Basics.Measurands
         }
 
         #region Operators
-        public static double operator /(Frequency lv, Frequency rv)
-        {
-            return lv.value / rv.value;
-        }
-
         public static Frequency operator +(Frequency lv, Frequency rV)
         {
             return new Frequency(lv.value + rV.value);
@@ -132,6 +127,22 @@ namespace VNIIFTRI.Basics.Measurands
             if (lv.value - rV.value < 0)
                 throw new ArithmeticException(name + " не может быть меньше 0.");
             return new Frequency(lv.value - rV.value);
+        }
+
+        public static Frequency operator *(Frequency lv, double rv)
+        {
+            if (rv < 0)
+                throw new ArithmeticException(name + " не может быть меньше 0.");
+            return new Frequency(lv.value * rv);
+        }
+        public static Frequency operator *(double lv, Frequency rv)
+        {
+            return rv * lv;
+        }
+
+        public static double operator /(Frequency lv, Frequency rv)
+        {
+            return lv.value / rv.value;
         }
         #endregion
     }

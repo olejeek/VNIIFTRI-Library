@@ -135,11 +135,7 @@ namespace VNIIFTRI.Basics.Measurands
             return Dimensions.Values.Contains(dimension);
         }
 
-        public static double operator /(Power lv, Power rv)
-        {
-            return lv.value / rv.value;
-        }
-
+        #region Operators
         public static Power operator +(Power lv, Power rV)
         {
             return new Power(lv.value + rV.value);
@@ -151,5 +147,22 @@ namespace VNIIFTRI.Basics.Measurands
                 throw new ArithmeticException(name + " не может быть меньше 0.");
             return new Power(lv.value - rV.value);
         }
+
+        public static Power operator *(Power lv, double rv)
+        {
+            if (rv < 0)
+                throw new ArithmeticException(name + " не может быть меньше 0.");
+            return new Power(lv.value * rv);
+        }
+        public static Power operator *(double lv, Power rv)
+        {
+            return rv * lv;
+        }
+
+        public static double operator /(Power lv, Power rv)
+        {
+            return lv.value / rv.value;
+        }
+        #endregion
     }
 }

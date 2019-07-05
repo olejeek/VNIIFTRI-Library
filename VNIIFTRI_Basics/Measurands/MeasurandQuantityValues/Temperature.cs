@@ -99,11 +99,6 @@ namespace VNIIFTRI.Basics.Measurands
         }
 
         #region Operators
-        public static double operator /(Temperature lv, Temperature rv)
-        {
-            return lv.value / rv.value;
-        }
-
         public static Temperature operator +(Temperature lv, Temperature rV)
         {
             return new Temperature(lv.value + rV.value);
@@ -114,6 +109,22 @@ namespace VNIIFTRI.Basics.Measurands
             if (lv.value - rV.value < 0)
                 throw new ArithmeticException(name + " не может быть меньше 0.");
             return new Temperature(lv.value - rV.value);
+        }
+
+        public static Temperature operator *(Temperature lv, double rv)
+        {
+            if (rv < 0)
+                throw new ArithmeticException(name + " не может быть меньше 0.");
+            return new Temperature(lv.value * rv);
+        }
+        public static Temperature operator *(double lv, Temperature rv)
+        {
+            return rv * lv;
+        }
+
+        public static double operator /(Temperature lv, Temperature rv)
+        {
+            return lv.value / rv.value;
         }
         #endregion
     }
