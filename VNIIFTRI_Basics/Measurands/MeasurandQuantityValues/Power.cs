@@ -39,6 +39,7 @@ namespace VNIIFTRI.Basics.Measurands
         public Power() { }
         public Power(double value)
         {
+            if (value < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение");
             this.value = value;
         }
         public Power(double value, Dimension dimension)
@@ -85,7 +86,11 @@ namespace VNIIFTRI.Basics.Measurands
                 throw new ArgumentException(dimension.ToString() +
                     " не является размерностью для измеряемой величины " + Name);
             double t = value;
-            if (dimension.Id % 3 == 0) this.value = t * Math.Pow(10, dimension.Id);
+            if (dimension.Id % 3 == 0)
+            {
+                if (t < 0) throw new ArgumentException(Name + " мощность не может иметь отрицательное значение");
+                this.value = t * Math.Pow(10, dimension.Id);
+            }
             else if (dimension == Power.dBm)
                 this.value = Math.Pow(10, t / 10) * Math.Pow(10, Power.mW.Id);
             else
@@ -95,7 +100,9 @@ namespace VNIIFTRI.Basics.Measurands
         protected override void SetValue(string src)
         {
             src = src.Replace(',', '.');
-            value = double.Parse(src, CultureInfo.InvariantCulture);
+            double t = double.Parse(src, CultureInfo.InvariantCulture);
+            if (t < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение");
+            value = t;
         }
 
         protected override void SetValue(string src, Dimension dimension)
@@ -128,10 +135,21 @@ namespace VNIIFTRI.Basics.Measurands
             return Dimensions.Values.Contains(dimension);
         }
 
-        public static double operator/ (Power lv, Power rv)
+        public static double operator /(Power lv, Power rv)
         {
             return lv.value / rv.value;
         }
 
+        public static Power operator +(Power lv, Power rV)
+        {
+            return new Power(lv.value + rV.value);
+        }
+
+        public static Power operator -(Power lv, Power rV)
+        {
+            if (lv.value - rV.value < 0)
+                throw new ArithmeticException(name + " не может быть меньше 0.");
+            return new Power(lv.value - rV.value);
+        }
     }
 }

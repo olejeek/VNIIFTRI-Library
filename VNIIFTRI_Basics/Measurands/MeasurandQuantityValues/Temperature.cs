@@ -27,6 +27,7 @@ namespace VNIIFTRI.Basics.Measurands
         public Temperature() { }
         public Temperature(double value)
         {
+            if (value < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение");
             this.value = value;
         }
         public Temperature(double value, Dimension dimension)
@@ -49,9 +50,11 @@ namespace VNIIFTRI.Basics.Measurands
             if (!Dimensions.Values.Contains(dimension))
                 throw new ArgumentException(dimension.ToString() +
                     " не является размерностью для измеряемой величины " + Name);
+            if (dimension == C) value -= AbsoluteNullInC;
+            if (value < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение в К " +
+                "или меньше " + AbsoluteNullInC + " в C");
             this.value = value;
-            if (dimension == K) return;
-            else if (dimension == C) this.value -= AbsoluteNullInC;
+            if (dimension == K || dimension == C) return;
             else
                 throw new ArgumentException("Неизвестная или неучтенная размерность в классе Temperature.");
         }
@@ -95,5 +98,23 @@ namespace VNIIFTRI.Basics.Measurands
             return Dimensions.Values.Contains(dimension);
         }
 
+        #region Operators
+        public static double operator /(Temperature lv, Temperature rv)
+        {
+            return lv.value / rv.value;
+        }
+
+        public static Temperature operator +(Temperature lv, Temperature rV)
+        {
+            return new Temperature(lv.value + rV.value);
+        }
+
+        public static Temperature operator -(Temperature lv, Temperature rV)
+        {
+            if (lv.value - rV.value < 0)
+                throw new ArithmeticException(name + " не может быть меньше 0.");
+            return new Temperature(lv.value - rV.value);
+        }
+        #endregion
     }
 }

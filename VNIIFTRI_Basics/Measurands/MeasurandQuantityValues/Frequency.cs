@@ -34,6 +34,7 @@ namespace VNIIFTRI.Basics.Measurands
         public Frequency() { }
         public Frequency(double value)
         {
+            if (value < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение");
             this.value = value;
         }
         public Frequency(double value, Dimension dimension)
@@ -56,14 +57,19 @@ namespace VNIIFTRI.Basics.Measurands
                 throw new ArgumentException(dimension.ToString() +
                     " не является размерностью для измеряемой величины " + Name);
             if (dimension.Id % 3 == 0)
+            {
+                if (value < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение");
                 this.value = value * Math.Pow(10, dimension.Id);
+            }
             else
                 throw new ArgumentException("Неизвестная или неучтенная размерность в классе Frequency.");
         }
         protected override void SetValue(string src)
         {
             src = src.Replace(',', '.');
-            value = double.Parse(src, CultureInfo.InvariantCulture);
+            double t = double.Parse(src, CultureInfo.InvariantCulture);
+            if (t < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение");
+            value = t;
         }
         protected override string FormatString(int length, char dimension)
         {
@@ -109,5 +115,24 @@ namespace VNIIFTRI.Basics.Measurands
         {
             return Dimensions.Values.Contains(dimension);
         }
+
+        #region Operators
+        public static double operator /(Frequency lv, Frequency rv)
+        {
+            return lv.value / rv.value;
+        }
+
+        public static Frequency operator +(Frequency lv, Frequency rV)
+        {
+            return new Frequency(lv.value + rV.value);
+        }
+
+        public static Frequency operator -(Frequency lv, Frequency rV)
+        {
+            if (lv.value - rV.value < 0)
+                throw new ArithmeticException(name + " не может быть меньше 0.");
+            return new Frequency(lv.value - rV.value);
+        }
+        #endregion
     }
 }
