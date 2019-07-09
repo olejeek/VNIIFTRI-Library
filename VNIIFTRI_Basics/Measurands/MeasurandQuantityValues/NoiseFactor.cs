@@ -38,6 +38,15 @@ namespace VNIIFTRI.Basics.Measurands
         #endregion
 
         #region Methods
+        public override int GetHashCode()
+        {
+            return value.GetHashCode() + (int)measurand;
+        }
+        public override bool Equals(object obj)
+        {
+            return !(obj is NoiseFactor o) ? false : value == o.value;
+        }
+
         public override string ToString()
         {
             return value.ToString();

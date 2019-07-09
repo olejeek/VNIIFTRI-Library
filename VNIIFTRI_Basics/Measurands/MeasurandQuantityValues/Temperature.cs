@@ -35,6 +35,15 @@ namespace VNIIFTRI.Basics.Measurands
             SetValue(value, dimension);
         }
 
+        public override int GetHashCode()
+        {
+            return value.GetHashCode() + (int)measurand;
+        }
+        public override bool Equals(object obj)
+        {
+            return !(obj is Temperature o) ? false : value == o.value;
+        }
+
         public override string ToString()
         {
             return value.ToString() + " " + DefaultDimension.ToString();
