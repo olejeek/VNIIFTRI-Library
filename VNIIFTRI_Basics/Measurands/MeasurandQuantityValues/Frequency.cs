@@ -154,6 +154,34 @@ namespace VNIIFTRI.Basics.Measurands
         {
             return lv.value / rv.value;
         }
+
+        public static bool operator >(Frequency lv, Frequency rv)
+        {
+            return lv.value > rv.value;
+        }
+        public static bool operator <(Frequency lv, Frequency rv)
+        {
+            return lv.value < rv.value;
+        }
+
+        public static bool operator >=(Frequency lv, Frequency rv)
+        {
+            return lv.value >= rv.value;
+        }
+        public static bool operator <=(Frequency lv, Frequency rv)
+        {
+            return lv.value <= rv.value;
+        }
+
+        public static bool operator ==(Frequency lv, Frequency rv)
+        {
+            return lv.value == rv.value;
+        }
+        public static bool operator !=(Frequency lv, Frequency rv)
+        {
+            return lv.value != rv.value;
+        }
+
         #endregion
     }
 }

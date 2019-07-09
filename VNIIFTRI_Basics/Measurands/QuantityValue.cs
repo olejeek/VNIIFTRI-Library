@@ -137,7 +137,5 @@ namespace VNIIFTRI.Basics.Measurands
         protected abstract T GetValue(Dimension dimension);
 
         
-
-        
     }
 }

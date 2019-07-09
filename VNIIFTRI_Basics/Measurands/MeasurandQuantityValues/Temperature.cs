@@ -50,7 +50,7 @@ namespace VNIIFTRI.Basics.Measurands
         }
         public override string ToString(Dimension dimension)
         {
-            return ((dimension == Temperature.C) ? value + AbsoluteNullInC : value).ToString() + 
+            return ((dimension == Temperature.C) ? value + AbsoluteNullInC : value).ToString() +
                 " " + dimension.ToString();
         }
 
@@ -80,7 +80,7 @@ namespace VNIIFTRI.Basics.Measurands
         protected override string FormatString(int length, char dimension)
         {
             Dimension dim = Dimensions.ContainsKey(dimension.ToString()) ? Dimensions[dimension.ToString()] : DefaultDimension;
-            
+
             double val = GetValue(dim);
             return MeasMath.SignifyString(val, length) + " " + dim.ToString();
         }
@@ -134,6 +134,33 @@ namespace VNIIFTRI.Basics.Measurands
         public static double operator /(Temperature lv, Temperature rv)
         {
             return lv.value / rv.value;
+        }
+
+        public static bool operator >(Temperature lv, Temperature rv)
+        {
+            return lv.value > rv.value;
+        }
+        public static bool operator <(Temperature lv, Temperature rv)
+        {
+            return lv.value < rv.value;
+        }
+
+        public static bool operator >=(Temperature lv, Temperature rv)
+        {
+            return lv.value >= rv.value;
+        }
+        public static bool operator <=(Temperature lv, Temperature rv)
+        {
+            return lv.value <= rv.value;
+        }
+
+        public static bool operator ==(Temperature lv, Temperature rv)
+        {
+            return lv.value == rv.value;
+        }
+        public static bool operator !=(Temperature lv, Temperature rv)
+        {
+            return lv.value != rv.value;
         }
         #endregion
     }

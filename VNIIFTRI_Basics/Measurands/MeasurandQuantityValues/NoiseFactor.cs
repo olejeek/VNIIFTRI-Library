@@ -137,6 +137,33 @@ namespace VNIIFTRI.Basics.Measurands
         {
             return lv.value / rv.value;
         }
+
+        public static bool operator >(NoiseFactor lv, NoiseFactor rv)
+        {
+            return lv.value > rv.value;
+        }
+        public static bool operator <(NoiseFactor lv, NoiseFactor rv)
+        {
+            return lv.value < rv.value;
+        }
+
+        public static bool operator >=(NoiseFactor lv, NoiseFactor rv)
+        {
+            return lv.value >= rv.value;
+        }
+        public static bool operator <=(NoiseFactor lv, NoiseFactor rv)
+        {
+            return lv.value <= rv.value;
+        }
+
+        public static bool operator ==(NoiseFactor lv, NoiseFactor rv)
+        {
+            return lv.value == rv.value;
+        }
+        public static bool operator !=(NoiseFactor lv, NoiseFactor rv)
+        {
+            return lv.value != rv.value;
+        }
         #endregion
     }
 }
