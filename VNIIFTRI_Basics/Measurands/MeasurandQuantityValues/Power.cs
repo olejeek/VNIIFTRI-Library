@@ -46,6 +46,10 @@ namespace VNIIFTRI.Basics.Measurands
         {
             SetValue(value, dimension);
         }
+        protected Power(double value, bool relative = false) : base(relative)
+        {
+            this.value = value;
+        }
 
         public override int GetHashCode()
         {
@@ -144,21 +148,19 @@ namespace VNIIFTRI.Basics.Measurands
         #region Operators
         public static Power operator +(Power lv, Power rV)
         {
-            return new Power(lv.value + rV.value);
+            return new Power(lv.value + rV.value, true);
         }
 
         public static Power operator -(Power lv, Power rV)
         {
-            if (lv.value - rV.value < 0)
-                throw new ArithmeticException(name + " не может быть меньше 0.");
-            return new Power(lv.value - rV.value);
+            return new Power(lv.value - rV.value, true);
         }
 
         public static Power operator *(Power lv, double rv)
         {
             if (rv < 0)
                 throw new ArithmeticException(name + " не может быть меньше 0.");
-            return new Power(lv.value * rv);
+            return new Power(lv.value * rv, true);
         }
         public static Power operator *(double lv, Power rv)
         {

@@ -41,6 +41,10 @@ namespace VNIIFTRI.Basics.Measurands
         {
             SetValue(value, dimension);
         }
+        protected Frequency(double value, bool relative = false) : base(relative)
+        {
+            this.value = value;
+        }
 
 
         public override int GetHashCode()
@@ -129,21 +133,17 @@ namespace VNIIFTRI.Basics.Measurands
         #region Operators
         public static Frequency operator +(Frequency lv, Frequency rV)
         {
-            return new Frequency(lv.value + rV.value);
+            return new Frequency(lv.value + rV.value, true);
         }
 
         public static Frequency operator -(Frequency lv, Frequency rV)
         {
-            if (lv.value - rV.value < 0)
-                throw new ArithmeticException(name + " не может быть меньше 0.");
-            return new Frequency(lv.value - rV.value);
+            return new Frequency(lv.value - rV.value, true);
         }
 
         public static Frequency operator *(Frequency lv, double rv)
         {
-            if (rv < 0)
-                throw new ArithmeticException(name + " не может быть меньше 0.");
-            return new Frequency(lv.value * rv);
+            return new Frequency(lv.value * rv, true);
         }
         public static Frequency operator *(double lv, Frequency rv)
         {

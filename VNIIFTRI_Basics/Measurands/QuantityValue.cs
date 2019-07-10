@@ -11,6 +11,9 @@ namespace VNIIFTRI.Basics.Measurands
     /// </summary>
     public abstract class QuantityValue
     {
+        protected readonly bool relative = false;
+
+        protected QuantityValue(bool relative) { this.relative = relative; }
         /// <summary>
         /// Защищенный абстрактный метод для присваивания значения измеряемой величене в единицах по умолчанию.
         /// Данный метод не должен содержать проверку на не число внутри строки.
@@ -86,6 +89,7 @@ namespace VNIIFTRI.Basics.Measurands
     /// <typeparam name="T">Тип числа, в котором измеряется величина 
     /// (целое, с плавающей точкой, комплексное)</typeparam>
     public abstract class QuantityValue<T> : QuantityValue, IFormattable
+        where T : struct
     {
         protected T value;
 
@@ -93,7 +97,8 @@ namespace VNIIFTRI.Basics.Measurands
         /// Конструктор без параметров, необходим для конструкторов без параметров для наследуемых
         /// классов
         /// </summary>
-        protected QuantityValue() { }
+        protected QuantityValue() : base(false) { }
+        protected QuantityValue(bool relative) : base (relative) { }
         public abstract string ToString(Dimension dimension);
         public abstract void SetValue(T value, Dimension dimension);
 
@@ -105,12 +110,6 @@ namespace VNIIFTRI.Basics.Measurands
         {
             this.value = value;
         }
-
-        //protected static bool CheckDimension(Measurand measurend, Dimension dimension)
-        //{
-        //    if (Dimension.AllDimensions[measurend].Values.Contains(dimension)) return true;
-        //    else return false;
-        //}
 
         public string ToString(string format, IFormatProvider formatProvider)
         {
@@ -135,7 +134,5 @@ namespace VNIIFTRI.Basics.Measurands
 
         protected abstract string FormatString(int length, char dimension);
         protected abstract T GetValue(Dimension dimension);
-
-        
     }
 }
