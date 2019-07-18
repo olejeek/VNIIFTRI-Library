@@ -36,26 +36,11 @@ namespace VNIIFTRI.Basics.Measurands
             SetValue(value, dimension);
         }
         #endregion
+        #region Fields
+        public override string Name { get { return name; } }
+        #endregion
 
         #region Methods
-        public override int GetHashCode()
-        {
-            return value.GetHashCode() + (int)measurand;
-        }
-        public override bool Equals(object obj)
-        {
-            return !(obj is NoiseFactor o) ? false : value == o.value;
-        }
-
-        public override string ToString()
-        {
-            return value.ToString();
-        }
-        public override string ToString(Dimension dimension)
-        {
-            if (dimension == dB) return value.ToString() + " " + dB.ToString();
-            else return ToString();
-        }
         protected override string FormatString(int length, char dimension)
         {
             Dimension dim = dimension == 'd' ? dB : unit;
@@ -63,18 +48,6 @@ namespace VNIIFTRI.Basics.Measurands
             return MeasMath.SignifyString(val, length) + " " + dim.ToString();
         }
 
-        protected override double GetValue(Dimension dimension)
-        {
-            if (!Dimensions.Values.Contains(dimension))
-                throw new ArgumentException(dimension.ToString() +
-                    " не является размерностью для измеряемой величины " + Name);
-            if (dimension == unit)
-                return value;
-            else if (dimension == dB)
-                return (10 * Math.Log10(this / new NoiseFactor(1, NoiseFactor.unit)));
-            else
-                throw new ArgumentException("Неизвестная или неучтенная размерность в классе " + Name);
-        }
         protected override void SetValue(string src)
         {
             src = src.Replace(',', '.');
@@ -85,6 +58,7 @@ namespace VNIIFTRI.Basics.Measurands
             src = src.Replace(',', '.');
             SetValue(double.Parse(src, CultureInfo.InvariantCulture), dimension);
         }
+
         public override void SetValue(double value, Dimension dimension)
         {
             if (!Dimensions.Values.Contains(dimension))
@@ -98,18 +72,36 @@ namespace VNIIFTRI.Basics.Measurands
                 throw new ArgumentException("Неизвестная или неучтенная размерность в классе Power.");
         }
 
-        public override bool Contains(Dimension dimension)
+        public override double GetValue(Dimension dimension)
         {
-            return Dimensions.Values.Contains(dimension);
-
+            if (!Dimensions.Values.Contains(dimension))
+                throw new ArgumentException(dimension.ToString() +
+                    " не является размерностью для измеряемой величины " + Name);
+            if (dimension == unit)
+                return value;
+            else if (dimension == dB)
+                return (10 * Math.Log10(this / new NoiseFactor(1, NoiseFactor.unit)));
+            else
+                throw new ArgumentException("Неизвестная или неучтенная размерность в классе " + Name);
         }
-        public override IEnumerator<Dimension> GetEnumerator()
+
+        public override int GetHashCode()
         {
-            return Dimensions.Values.GetEnumerator();
+            return value.GetHashCode() + (int)measurand;
         }
-
-        public override string Name { get { return name; } }
-
+        public override bool Equals(object obj)
+        {
+            return !(obj is NoiseFactor o) ? false : value == o.value;
+        }
+        public override string ToString()
+        {
+            return value.ToString();
+        }
+        public override string ToString(Dimension dimension)
+        {
+            if (dimension == dB) return GetValue(dB).ToString() + " " + dB.ToString();
+            else return ToString();
+        }
         #endregion
 
         #region Operators

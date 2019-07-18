@@ -78,8 +78,6 @@ namespace VNIIFTRI.Basics.Measurands
             return t;
         }
 
-        public abstract IEnumerator<Dimension> GetEnumerator();
-        public abstract bool Contains(Dimension dimension);
         public abstract string Name { get; }
     }
 
@@ -133,6 +131,6 @@ namespace VNIIFTRI.Basics.Measurands
         }
 
         protected abstract string FormatString(int length, char dimension);
-        protected abstract T GetValue(Dimension dimension);
+        public abstract T GetValue(Dimension dimension);
     }
 }

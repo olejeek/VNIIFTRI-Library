@@ -26,6 +26,10 @@ namespace VNIIFTRI.Basics.Measurands
         /// <summary>
         /// Коэффициент шума
         /// </summary>
-        NoiseFactor
+        NoiseFactor,
+        /// <summary>
+        /// Комплексный коэффициент отражения
+        /// </summary>
+        ComplexReflectionCoefficient
     }
 }

@@ -31,6 +31,8 @@ namespace VNIIFTRI.Basics.Measurands
             };
         public static readonly Dimension DefaultDimension = Hz;
         #endregion
+
+        #region Constructors
         public Frequency() { }
         public Frequency(double value)
         {
@@ -45,46 +47,13 @@ namespace VNIIFTRI.Basics.Measurands
         {
             this.value = value;
         }
+        #endregion
 
+        #region Fields
+        public override string Name { get { return name; } }
+        #endregion
 
-        public override int GetHashCode()
-        {
-            return value.GetHashCode() + (int)measurand;
-        }
-        public override bool Equals(object obj)
-        {
-            return !(obj is Frequency o) ? false : value == o.value;
-        }
-
-        public override string ToString()
-        {
-            return value.ToString() + " " + DefaultDimension.ToString();
-        }
-        public override string ToString(Dimension dimension)
-        {
-            return (value / Math.Pow(10, dimension.Id)).ToString() + " " + dimension.ToString();
-        }
-
-        public override void SetValue(double value, Dimension dimension)
-        {
-            if (!Dimensions.Values.Contains(dimension))
-                throw new ArgumentException(dimension.ToString() +
-                    " не является размерностью для измеряемой величины " + Name);
-            if (dimension.Id % 3 == 0)
-            {
-                if (value < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение");
-                this.value = value * Math.Pow(10, dimension.Id);
-            }
-            else
-                throw new ArgumentException("Неизвестная или неучтенная размерность в классе Frequency.");
-        }
-        protected override void SetValue(string src)
-        {
-            src = src.Replace(',', '.');
-            double t = double.Parse(src, CultureInfo.InvariantCulture);
-            if (t < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение");
-            value = t;
-        }
+        #region Methods
         protected override string FormatString(int length, char dimension)
         {
             Dimension dim = DefaultDimension;
@@ -101,7 +70,35 @@ namespace VNIIFTRI.Basics.Measurands
             double val = GetValue(dim);
             return MeasMath.SignifyString(val, length) + " " + dim.ToString();
         }
-        protected override double GetValue(Dimension dimension)
+
+        protected override void SetValue(string src)
+        {
+            src = src.Replace(',', '.');
+            double t = double.Parse(src, CultureInfo.InvariantCulture);
+            if (t < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение");
+            value = t;
+        }
+        protected override void SetValue(string src, Dimension dimension)
+        {
+            src = src.Replace(',', '.');
+            SetValue(double.Parse(src, CultureInfo.InvariantCulture), dimension);
+        }
+
+        public override void SetValue(double value, Dimension dimension)
+        {
+            if (!Dimensions.Values.Contains(dimension))
+                throw new ArgumentException(dimension.ToString() +
+                    " не является размерностью для измеряемой величины " + Name);
+            if (dimension.Id % 3 == 0)
+            {
+                if (value < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение");
+                this.value = value * Math.Pow(10, dimension.Id);
+            }
+            else
+                throw new ArgumentException("Неизвестная или неучтенная размерность в классе Frequency.");
+        }
+
+        public override double GetValue(Dimension dimension)
         {
             if (!Dimensions.Values.Contains(dimension))
                 throw new ArgumentException(dimension.ToString() +
@@ -112,23 +109,23 @@ namespace VNIIFTRI.Basics.Measurands
                 throw new ArgumentException("Неизвестная или неучтенная размерность в классе " + Name);
         }
 
-        protected override void SetValue(string src, Dimension dimension)
+        public override int GetHashCode()
         {
-            src = src.Replace(',', '.');
-            SetValue(double.Parse(src, CultureInfo.InvariantCulture), dimension);
+            return value.GetHashCode() + (int)measurand;
         }
-
-        public override string Name { get { return name; } }
-
-        public override IEnumerator<Dimension> GetEnumerator()
+        public override bool Equals(object obj)
         {
-            return Dimensions.Values.GetEnumerator();
+            return !(obj is Frequency o) ? false : value == o.value;
         }
-
-        public override bool Contains(Dimension dimension)
+        public override string ToString()
         {
-            return Dimensions.Values.Contains(dimension);
+            return value.ToString() + " " + DefaultDimension.ToString();
         }
+        public override string ToString(Dimension dimension)
+        {
+            return (value / Math.Pow(10, dimension.Id)).ToString() + " " + dimension.ToString();
+        }
+        #endregion
 
         #region Operators
         public static Frequency operator +(Frequency lv, Frequency rV)

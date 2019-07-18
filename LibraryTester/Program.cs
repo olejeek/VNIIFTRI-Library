@@ -50,12 +50,10 @@ namespace LibraryTester
             //NoiseFactor h = new NoiseFactor(5.1, NoiseFactor.dB);
             //for (int i = 1; i < 9; ++i)
             //    Console.WriteLine("{0:N" + i + "}\t{0:" + i + "}", h);
-            Frequency f1 = new Frequency(20);
-            Frequency f2 = new Frequency(10);
-            Frequency f3 = new Frequency(5);
-            Frequency f4 = new Frequency(3);
-            double a = (f1 - f2) / (f3 - f4);
+            ComplexReflectionCoefficient a = new ComplexReflectionCoefficient(new VNIIFTRI.Basics.Mathematic.Complex(2, 3));
+
             Console.WriteLine(a);
+            Console.WriteLine("{0:3}\t{0:3d}\t{0:5P}", a);
             Console.ReadKey();
         }
     }

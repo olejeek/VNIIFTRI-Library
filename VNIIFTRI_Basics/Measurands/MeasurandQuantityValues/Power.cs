@@ -36,6 +36,8 @@ namespace VNIIFTRI.Basics.Measurands
         public static readonly Dimension DefaultDimension = Power.W;
 
         #endregion
+
+        #region Constructors
         public Power() { }
         public Power(double value)
         {
@@ -50,31 +52,17 @@ namespace VNIIFTRI.Basics.Measurands
         {
             this.value = value;
         }
+        #endregion
 
-        public override int GetHashCode()
-        {
-            return value.GetHashCode() + (int)measurand;
-        }
-        public override bool Equals(object obj)
-        {
-            return !(obj is Power o) ? false : value == o.value;
-        }
+        #region Fields
+        public override string Name { get { return name; } }
+        #endregion
 
-        public override string ToString()
-        {
-            return value.ToString() + " " + DefaultDimension.ToString();
-        }
-        public override string ToString(Dimension dimension)
-        {
-            StringBuilder sb = new StringBuilder(20);
-            sb.Append(GetValue(dimension));
-            sb.Append(" " + dimension.ToString());
-            return sb.ToString();
-        }
+        #region Methods
         protected override string FormatString(int length, char dimension)
         {
             Dimension dim = DefaultDimension;
-            switch(dimension)
+            switch (dimension)
             {
                 case 'p':
                 case 'n':
@@ -90,6 +78,19 @@ namespace VNIIFTRI.Basics.Measurands
             }
             double val = GetValue(dim);
             return MeasMath.SignifyString(val, length) + " " + dim.ToString();
+        }
+
+        protected override void SetValue(string src)
+        {
+            src = src.Replace(',', '.');
+            double t = double.Parse(src, CultureInfo.InvariantCulture);
+            if (t < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение");
+            value = t;
+        }
+        protected override void SetValue(string src, Dimension dimension)
+        {
+            src = src.Replace(',', '.');
+            SetValue(double.Parse(src, CultureInfo.InvariantCulture), dimension);
         }
 
         public override void SetValue(double value, Dimension dimension)
@@ -108,19 +109,8 @@ namespace VNIIFTRI.Basics.Measurands
             else
                 throw new ArgumentException("Неизвестная или неучтенная размерность в классе Power.");
         }
-        protected override void SetValue(string src)
-        {
-            src = src.Replace(',', '.');
-            double t = double.Parse(src, CultureInfo.InvariantCulture);
-            if (t < 0) throw new ArgumentException(Name + " не может иметь отрицательное значение");
-            value = t;
-        }
-        protected override void SetValue(string src, Dimension dimension)
-        {
-            src = src.Replace(',', '.');
-            SetValue(double.Parse(src, CultureInfo.InvariantCulture), dimension);
-        }
-        protected override double GetValue(Dimension dimension)
+
+        public override double GetValue(Dimension dimension)
         {
             if (!Dimensions.Values.Contains(dimension))
                 throw new ArgumentException(dimension.ToString() +
@@ -133,17 +123,26 @@ namespace VNIIFTRI.Basics.Measurands
                 throw new ArgumentException("Неизвестная или неучтенная размерность в классе " + Name);
         }
 
-        public override string Name { get { return name; } }
-
-        public override IEnumerator<Dimension> GetEnumerator()
+        public override int GetHashCode()
         {
-            return Dimensions.Values.GetEnumerator();
+            return value.GetHashCode() + (int)measurand;
         }
-
-        public override bool Contains(Dimension dimension)
+        public override bool Equals(object obj)
         {
-            return Dimensions.Values.Contains(dimension);
+            return !(obj is Power o) ? false : value == o.value;
         }
+        public override string ToString()
+        {
+            return value.ToString() + " " + DefaultDimension.ToString();
+        }
+        public override string ToString(Dimension dimension)
+        {
+            StringBuilder sb = new StringBuilder(20);
+            sb.Append(GetValue(dimension));
+            sb.Append(" " + dimension.ToString());
+            return sb.ToString();
+        }
+        #endregion
 
         #region Operators
         public static Power operator +(Power lv, Power rV)
