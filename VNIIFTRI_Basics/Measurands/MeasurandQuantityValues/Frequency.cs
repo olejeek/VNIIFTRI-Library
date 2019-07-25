@@ -8,7 +8,7 @@ using VNIIFTRI.Basics.Mathematic;
 
 namespace VNIIFTRI.Basics.Measurands
 {
-    public class Frequency : QuantityValue<double>
+    public class Frequency : QuantityValueDouble
     {
         #region Static
         public static readonly Dimension mHz = new Dimension(Measurand.Frequency, -3, "mHz");
@@ -51,6 +51,7 @@ namespace VNIIFTRI.Basics.Measurands
 
         #region Fields
         public override string Name { get { return name; } }
+        public override Measurand Measurand { get { return measurand; } }
         #endregion
 
         #region Methods
@@ -71,6 +72,10 @@ namespace VNIIFTRI.Basics.Measurands
             return MeasMath.SignifyString(val, length) + " " + dim.ToString();
         }
 
+        protected override QuantityValueDouble Creator(double value)
+        {
+            return new Frequency(value);
+        }
         protected override void SetValue(string src)
         {
             src = src.Replace(',', '.');

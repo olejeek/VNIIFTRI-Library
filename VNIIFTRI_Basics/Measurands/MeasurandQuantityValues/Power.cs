@@ -8,7 +8,7 @@ using VNIIFTRI.Basics.Mathematic;
 
 namespace VNIIFTRI.Basics.Measurands
 {
-    public class Power : QuantityValue<double>
+    public class Power : QuantityValueDouble
     {
         #region Static
         public static readonly Dimension pW = new Dimension(Measurand.Power, -12, "pW");
@@ -56,6 +56,7 @@ namespace VNIIFTRI.Basics.Measurands
 
         #region Fields
         public override string Name { get { return name; } }
+        public override Measurand Measurand { get { return measurand; } }
         #endregion
 
         #region Methods
@@ -80,6 +81,10 @@ namespace VNIIFTRI.Basics.Measurands
             return MeasMath.SignifyString(val, length) + " " + dim.ToString();
         }
 
+        protected override QuantityValueDouble Creator(double value)
+        {
+            return new Power(value);
+        }
         protected override void SetValue(string src)
         {
             src = src.Replace(',', '.');

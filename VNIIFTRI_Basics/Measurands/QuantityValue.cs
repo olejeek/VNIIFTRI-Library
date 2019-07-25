@@ -11,9 +11,23 @@ namespace VNIIFTRI.Basics.Measurands
     /// </summary>
     public abstract class QuantityValue
     {
+        #region Static
+        
+        #endregion
+
+        #region Vars
         protected readonly bool relative = false;
+        #endregion
+        #region Fields
+        public abstract string Name { get; }
+        public abstract Measurand Measurand { get; }
+        #endregion
+        #region Constructors
+        protected QuantityValue() { }
 
         protected QuantityValue(bool relative) { this.relative = relative; }
+        #endregion
+        #region Methods
         /// <summary>
         /// Защищенный абстрактный метод для присваивания значения измеряемой величене в единицах по умолчанию.
         /// Данный метод не должен содержать проверку на не число внутри строки.
@@ -39,7 +53,7 @@ namespace VNIIFTRI.Basics.Measurands
         /// формат строки, где величина представлена ввиде числа с единицами измерения, разделенные
         /// пробелом</param>
         /// <returns>Величина, сконвертированная из значения строки</returns>
-        public static T CreateValue<T>(string src)
+        public static T Creator<T>(string src)
             where T : QuantityValue, new()
         {
             T t = new T();
@@ -67,7 +81,7 @@ namespace VNIIFTRI.Basics.Measurands
         /// <param name="src">Строка, содержащая численное значение величины</param>
         /// <param name="dimension">Единца измерений, в которых представлена величина</param>
         /// <returns>Величина, сконвертированная из значения строки и единицы измерения</returns>
-        public static T CreateValue<T>(string src, Dimension dimension)
+        public static T Creator<T>(string src, Dimension dimension)
             where T : QuantityValue, new()
         {
             T t = new T();
@@ -78,59 +92,28 @@ namespace VNIIFTRI.Basics.Measurands
             return t;
         }
 
-        public abstract string Name { get; }
-    }
-
-    /// <summary>
-    /// Обобщенный абстрактный класс, представляющий измеряемую величину
-    /// </summary>
-    /// <typeparam name="T">Тип числа, в котором измеряется величина 
-    /// (целое, с плавающей точкой, комплексное)</typeparam>
-    public abstract class QuantityValue<T> : QuantityValue, IFormattable
-        where T : struct
-    {
-        protected T value;
-
-        /// <summary>
-        /// Конструктор без параметров, необходим для конструкторов без параметров для наследуемых
-        /// классов
-        /// </summary>
-        protected QuantityValue() : base(false) { }
-        protected QuantityValue(bool relative) : base (relative) { }
-        public abstract string ToString(Dimension dimension);
-        public abstract void SetValue(T value, Dimension dimension);
-
-        /// <summary>
-        /// Присваивание значение value измеренному значению
-        /// </summary>
-        /// <param name="value">Присваиваемое значение</param>
-        public void SetValue(T value)
-        {
-            this.value = value;
-        }
-
-        public string ToString(string format, IFormatProvider formatProvider)
-        {
-            if (format == null) return ToString();
-            char dimension = '\0';
-            int length;
-            StringBuilder sb = new StringBuilder(40);
-            if (format[0] == 'N')
-            {
-                sb.Append(Name + ": ");
-                format = format.Substring(1);
-            }
-            if (char.IsLetter(format.Last()))
-            {
-                dimension = format.Last();
-                format = format.Substring(0, format.Length - 1);
-            }
-            int.TryParse(format, out length);
-            sb.Append(FormatString(length, dimension));
-            return sb.ToString();
-        }
-
         protected abstract string FormatString(int length, char dimension);
-        public abstract T GetValue(Dimension dimension);
+        public abstract string ToString(Dimension dimension);
+        #endregion
+        #region Operators
+        public static QuantityValue operator +(QuantityValue lv, QuantityValue rv)
+        {
+            if ((lv is QuantityValueDouble) && (rv is QuantityValueDouble))
+                return (QuantityValueDouble)lv + (QuantityValueDouble)rv;
+            else if ((lv is QuantityValueComplex) && (rv is QuantityValueComplex))
+                return (QuantityValueComplex)lv + (QuantityValueComplex)rv;
+            else throw new ArgumentException("Не предусмотрена реализация сложения величин: "
+                + lv.Name + " и " + rv.Name + ". См. класс QuantityValue");
+        }
+        public static QuantityValue operator -(QuantityValue lv, QuantityValue rv)
+        {
+            if ((lv is QuantityValueDouble) && (rv is QuantityValueDouble))
+                return (QuantityValueDouble)lv - (QuantityValueDouble)rv;
+            else if ((lv is QuantityValueComplex) && (rv is QuantityValueComplex))
+                return (QuantityValueComplex)lv - (QuantityValueComplex)rv;
+            else throw new ArgumentException("Не предусмотрена реализация вычитания величин: "
+                + lv.Name + " и " + rv.Name + ". См. класс QuantityValue");
+        }
+        #endregion
     }
 }

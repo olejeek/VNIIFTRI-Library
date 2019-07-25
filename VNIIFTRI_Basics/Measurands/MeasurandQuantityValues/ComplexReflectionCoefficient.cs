@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace VNIIFTRI.Basics.Measurands
 {
-    public class ComplexReflectionCoefficient : QuantityValue<Complex>
+    public class ComplexReflectionCoefficient : QuantityValueComplex
     {
         #region Static
         public static readonly Dimension unit = new Dimension(Measurand.NoiseFactor, 0, "");
@@ -35,17 +35,20 @@ namespace VNIIFTRI.Basics.Measurands
             SetValue(value, dimension);
         }
         #endregion
-
         #region Fields
         public override string Name { get { return name; } }
+        public override Measurand Measurand { get { return measurand; } }
         #endregion
-
         #region Methods
         protected override string FormatString(int length, char dimension)
         {
             return value.ToString(length.ToString() + dimension.ToString(), null);
         }
 
+        protected override QuantityValueComplex Creator(Complex value)
+        {
+            return new ComplexReflectionCoefficient(value);
+        }
         protected override void SetValue(string src)
         {
             value = Complex.Parse(src);
@@ -93,7 +96,6 @@ namespace VNIIFTRI.Basics.Measurands
             else return ToString();
         }
         #endregion
-
         #region Operators
         public static ComplexReflectionCoefficient operator +(ComplexReflectionCoefficient lv, ComplexReflectionCoefficient rV)
         {

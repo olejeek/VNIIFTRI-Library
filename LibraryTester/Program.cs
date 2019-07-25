@@ -51,7 +51,10 @@ namespace LibraryTester
             //for (int i = 1; i < 9; ++i)
             //    Console.WriteLine("{0:N" + i + "}\t{0:" + i + "}", h);
             ComplexReflectionCoefficient a = new ComplexReflectionCoefficient(new VNIIFTRI.Basics.Mathematic.Complex(2, 3));
-
+            ComplexReflectionCoefficient b = new ComplexReflectionCoefficient(new VNIIFTRI.Basics.Mathematic.Complex(1, 2));
+            QuantityValue c = a;
+            QuantityValue d = b;
+            c =(c + d);
             Console.WriteLine(a);
             Console.WriteLine("{0:3}\t{0:3d}\t{0:5P}", a);
             Console.ReadKey();

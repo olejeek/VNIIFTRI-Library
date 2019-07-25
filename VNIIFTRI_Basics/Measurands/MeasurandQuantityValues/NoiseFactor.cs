@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace VNIIFTRI.Basics.Measurands
 {
-    public class NoiseFactor:QuantityValue<double>
+    public class NoiseFactor : QuantityValueDouble
     {
         #region Static
         public static readonly Dimension unit = new Dimension(Measurand.NoiseFactor, 0, "");
@@ -38,6 +38,7 @@ namespace VNIIFTRI.Basics.Measurands
         #endregion
         #region Fields
         public override string Name { get { return name; } }
+        public override Measurand Measurand { get { return measurand; } }
         #endregion
 
         #region Methods
@@ -48,6 +49,10 @@ namespace VNIIFTRI.Basics.Measurands
             return MeasMath.SignifyString(val, length) + " " + dim.ToString();
         }
 
+        protected override QuantityValueDouble Creator(double value)
+        {
+            return new NoiseFactor(value);
+        }
         protected override void SetValue(string src)
         {
             src = src.Replace(',', '.');

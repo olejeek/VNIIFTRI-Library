@@ -8,7 +8,7 @@ using VNIIFTRI.Basics.Mathematic;
 
 namespace VNIIFTRI.Basics.Measurands
 {
-    public class Temperature : QuantityValue<double>
+    public class Temperature : QuantityValueDouble
     {
         #region Static
         public static readonly Dimension K = new Dimension(Measurand.Temperature, 0, "K");
@@ -44,6 +44,7 @@ namespace VNIIFTRI.Basics.Measurands
 
         #region Fields
         public override string Name { get { return name; } }
+        public override Measurand Measurand { get { return measurand; } }
         #endregion
 
         #region Methods
@@ -55,6 +56,10 @@ namespace VNIIFTRI.Basics.Measurands
             return MeasMath.SignifyString(val, length) + " " + dim.ToString();
         }
 
+        protected override QuantityValueDouble Creator(double value)
+        {
+            return new Temperature(value);
+        }
         protected override void SetValue(string src)
         {
             src = src.Replace(',', '.');

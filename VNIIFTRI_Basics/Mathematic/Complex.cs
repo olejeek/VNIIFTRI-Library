@@ -139,7 +139,6 @@ namespace VNIIFTRI.Basics.Mathematic
         {
             return new Complex(re, 0);
         }
-
         public static bool operator ==(Complex lv, Complex rv)
         {
             return lv.Re == rv.Re && lv.Im == rv.Im;
